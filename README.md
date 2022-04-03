@@ -1,7 +1,7 @@
 # gonesis
 Create Golang project structure ready to be pushed on GitHub with a single command (Go + Genesis)
 
-Installation 📝
+Installation 📡
 -------
 **Go 1.17+**
 ```bash
@@ -11,6 +11,10 @@ go install -v github.com/edoardottt/gonesis@latest
 ```bash
 go get -v github.com/edoardottt/gonesis
 ```
+
+Usage 💻
+-------
+`gonesis` (or `~/go/bin/gonesis` if you encounter errors)
 
 License 📝
 -------
