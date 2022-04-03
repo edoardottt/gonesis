@@ -77,31 +77,11 @@ func main() {
 	}
 
 	//README.md
-	CreateFile(rootDir, "README.md")
-	readme := "# " + projectName
-	WriteFile(rootDir+string(os.PathSeparator)+"README.md", readme)
+	Readme(rootDir, projectName)
 
 	//.gitignore
-	CreateFile(rootDir, ".gitignore")
-	gitignore := `# Binaries for programs and plugins
-*.exe
-*.exe~
-*.dll
-*.so
-*.dylib
-	
-# Test binary, built with "go test -c"
-*.test
+	Gitignore(rootDir)
 
-# Output of the go coverage tool, specifically when used with LiteIDE
-*.out
-
-# Dependency directories (remove the comment below to include it)
-# vendor/
-
-# Go workspace file
-go.work`
-	WriteFile(rootDir+string(os.PathSeparator)+".gitignore", gitignore)
 }
 
 //ProjectName takes as input from stdin the name of the
@@ -147,6 +127,38 @@ func AskUser(question string) bool {
 		return true
 	}
 	return false
+}
+
+//Gitignore creates the .gitignore file.
+func Gitignore(rootDir string) {
+	CreateFile(rootDir, ".gitignore")
+	gitignore := `# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+	
+# Test binary, built with "go test -c"
+*.test
+
+# Output of the go coverage tool, specifically when used with LiteIDE
+*.out
+
+# Dependency directories (remove the comment below to include it)
+# vendor/
+
+# Go workspace file
+go.work`
+	WriteFile(rootDir+string(os.PathSeparator)+".gitignore", gitignore)
+}
+
+//Readme creates the README.md file.
+func Readme(rootDir string, projectName string) {
+	CreateFile(rootDir, "README.md")
+	readme := "# " + projectName
+	readme = readme + "\n\nCreated with [gonesis](https://github.com/edoardottt/gonesis)❤️"
+	WriteFile(rootDir+string(os.PathSeparator)+"README.md", readme)
 }
 
 //----------------------------------------
