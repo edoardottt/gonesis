@@ -1,5 +1,5 @@
 # gonesis
-Create Golang project structure ready to be pushed on GitHub
+Create Golang project structure ready to be pushed on GitHub (Go + Genesis)
 
 Installation 📝
 -------
