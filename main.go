@@ -22,18 +22,9 @@ func main() {
 
 	//cmd
 	CreateDir(rootDir, "cmd")
-	CreateFile(rootDir+string(os.PathSeparator)+"cmd", projectName+".go")
-	main := `package main
 
-import (
-	"fmt"
-)
-
-func main() {
-	fmt.Println("Hello, World!")
-}
-`
-	WriteFile(rootDir+string(os.PathSeparator)+"cmd"+string(os.PathSeparator)+projectName+".go", main)
+	//main
+	CreateMain(rootDir, projectName)
 
 	//go.mod
 	name := GithubHandle()
@@ -99,6 +90,22 @@ func ProjectName() (string, error) {
 	}
 
 	return project, nil
+}
+
+//CreateMain creates the main.go file.
+func CreateMain(rootDir string, projectName string) {
+	CreateFile(rootDir+string(os.PathSeparator)+"cmd", projectName+".go")
+	main := `package main
+
+import (
+	"fmt"
+)
+
+func main() {
+	fmt.Println("Hello, World!")
+}
+`
+	WriteFile(rootDir+string(os.PathSeparator)+"cmd"+string(os.PathSeparator)+projectName+".go", main)
 }
 
 //GithubHandle takes as input from stdin the github profile name.
