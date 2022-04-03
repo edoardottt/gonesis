@@ -1,3 +1,15 @@
+/*
+gonesis
+
+Create Golang project structure ready to be pushed on GitHub with a single command
+
+https://github.com/edoardottt/gonesis
+
+edoardottt, https://www.edoardoottavianelli.it
+
+Under GNU-GPL3: https://github.com/edoardottt/gonesis/blob/main/LICENSE
+*/
+
 package main
 
 import (
