@@ -20,6 +20,9 @@ func main() {
 	rootDir := "." + string(os.PathSeparator) + projectName
 	CreateDir(".", projectName)
 
+	//description
+	description := Description()
+
 	//cmd
 	CreateDir(rootDir, "cmd")
 
@@ -68,7 +71,7 @@ func main() {
 	}
 
 	//README.md
-	Readme(rootDir, projectName)
+	Readme(rootDir, projectName, description, name)
 
 	//.gitignore
 	Gitignore(rootDir)
@@ -119,6 +122,17 @@ func GithubHandle() string {
 	return name
 }
 
+//Description takes as input from stdin the project description.
+func Description() string {
+	reader := bufio.NewReader(os.Stdin)
+	fmt.Print("Project description: ")
+	desc, _ := reader.ReadString('\n')
+	if len(desc) > 0 && desc[len(desc)-1] == '\n' {
+		desc = desc[:len(desc)-1]
+	}
+	return desc
+}
+
 //AskUser prints the question taken as input and if
 //the input is y/Y or yes/Yes/YES etc. returns true,
 //false otherwise.
@@ -161,10 +175,26 @@ go.work`
 }
 
 //Readme creates the README.md file.
-func Readme(rootDir string, projectName string) {
+func Readme(rootDir string, projectName string, description string, name string) {
 	CreateFile(rootDir, "README.md")
 	readme := "# " + projectName
-	readme = readme + "\n\nCreated with [gonesis](https://github.com/edoardottt/gonesis)❤️"
+	readme = readme + "\n" + description
+	readme = readme + "\n\nInstallation 📡\n"
+	readme = readme + "-------\n"
+	readme = readme + "**Go 1.17+**\n"
+	readme = readme + "```bash\n"
+	readme = readme + "go install -v github.com/" + name + "/" + projectName + "@latest\n"
+	readme = readme + "```\n"
+	readme = readme + "**otherwise**\n"
+	readme = readme + "```bash\n"
+	readme = readme + "go get -v github.com/" + name + "/" + projectName + "\n"
+	readme = readme + "```\n\n"
+	readme = readme + "Usage 💻\n"
+	readme = readme + "-------\n"
+	readme = readme + "```bash\n"
+	readme = readme + projectName + "\n"
+	readme = readme + "```\n\n"
+	readme = readme + "Created with [gonesis](https://github.com/edoardottt/gonesis)❤️"
 	WriteFile(rootDir+string(os.PathSeparator)+"README.md", readme)
 }
 
