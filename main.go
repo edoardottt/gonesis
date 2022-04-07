@@ -72,9 +72,9 @@ func main() {
 		CreateDir(rootDir, "api")
 	}
 
-	//web
-	if AskUser("Will you need a web server?") {
-		CreateDir(rootDir, "web")
+	//server
+	if AskUser("Will you need a server?") {
+		CreateDir(rootDir, "server")
 	}
 
 	//db
