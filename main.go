@@ -30,13 +30,19 @@ func main() {
 		log.Fatal(err)
 	}
 	rootDir := "." + string(os.PathSeparator) + projectName
-	CreateDir(".", projectName)
+	err = CreateDir(".", projectName)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	//description
 	description := Description()
 
 	//cmd
-	CreateDir(rootDir, "cmd")
+	err = CreateDir(rootDir, "cmd")
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	//main
 	CreateMain(rootDir, projectName)
@@ -56,30 +62,51 @@ func main() {
 	}
 
 	//pkg
-	CreateDir(rootDir, "pkg")
+	err = CreateDir(rootDir, "pkg")
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	//docs
-	CreateDir(rootDir, "docs")
+	err = CreateDir(rootDir, "docs")
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	//internal
-	CreateDir(rootDir, "internal")
+	err = CreateDir(rootDir, "internal")
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	//examples
-	CreateDir(rootDir, "examples")
+	err = CreateDir(rootDir, "examples")
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	//api
 	if AskUser("Will you need API?") {
-		CreateDir(rootDir, "api")
+		err = CreateDir(rootDir, "api")
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
 
 	//server
 	if AskUser("Will you need a server?") {
-		CreateDir(rootDir, "server")
+		err = CreateDir(rootDir, "server")
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
 
 	//db
 	if AskUser("Will you need a database?") {
-		CreateDir(rootDir, "db")
+		err = CreateDir(rootDir, "db")
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
 
 	//README.md
@@ -109,7 +136,10 @@ func ProjectName() (string, error) {
 
 //CreateMain creates the main.go file.
 func CreateMain(rootDir string, projectName string) {
-	CreateFile(rootDir+string(os.PathSeparator)+"cmd", projectName+".go")
+	err := CreateFile(rootDir+string(os.PathSeparator)+"cmd", projectName+".go")
+	if err != nil {
+		log.Fatal(err)
+	}
 	main := `package main
 
 import (
@@ -120,7 +150,10 @@ func main() {
 	fmt.Println("Hello, World!")
 }
 `
-	WriteFile(rootDir+string(os.PathSeparator)+"cmd"+string(os.PathSeparator)+projectName+".go", main)
+	err = WriteFile(rootDir+string(os.PathSeparator)+"cmd"+string(os.PathSeparator)+projectName+".go", main)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 //GithubHandle takes as input from stdin the github profile name.
@@ -164,7 +197,10 @@ func AskUser(question string) bool {
 
 //Gitignore creates the .gitignore file.
 func Gitignore(rootDir string) {
-	CreateFile(rootDir, ".gitignore")
+	err := CreateFile(rootDir, ".gitignore")
+	if err != nil {
+		log.Fatal(err)
+	}
 	gitignore := `# Binaries for programs and plugins
 *.exe
 *.exe~
@@ -183,12 +219,18 @@ func Gitignore(rootDir string) {
 
 # Go workspace file
 go.work`
-	WriteFile(rootDir+string(os.PathSeparator)+".gitignore", gitignore)
+	err = WriteFile(rootDir+string(os.PathSeparator)+".gitignore", gitignore)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 //Readme creates the README.md file.
 func Readme(rootDir string, projectName string, description string, name string) {
-	CreateFile(rootDir, "README.md")
+	err := CreateFile(rootDir, "README.md")
+	if err != nil {
+		log.Fatal(err)
+	}
 	readme := "# " + projectName
 	readme = readme + "\n" + description
 	readme = readme + "\n\nInstallation 📡\n"
@@ -207,7 +249,10 @@ func Readme(rootDir string, projectName string, description string, name string)
 	readme = readme + projectName + "\n"
 	readme = readme + "```\n\n"
 	readme = readme + "Created with [gonesis](https://github.com/edoardottt/gonesis)❤️"
-	WriteFile(rootDir+string(os.PathSeparator)+"README.md", readme)
+	err = WriteFile(rootDir+string(os.PathSeparator)+"README.md", readme)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 //----------------------------------------
@@ -216,32 +261,20 @@ func Readme(rootDir string, projectName string, description string, name string)
 
 //CreateDir creates the directory with the name
 //taken as input.
-func CreateDir(path string, name string) (bool, error) {
+func CreateDir(path string, name string) error {
 	err := os.MkdirAll(path+string(os.PathSeparator)+name, 0775)
-	success := false
-	if err == nil {
-		success = true
-	}
-	return success, err
+	return err
 }
 
 //CreateFile creates the file with the name
 //taken as input.
-func CreateFile(path string, name string) (bool, error) {
+func CreateFile(path string, name string) error {
 	err := ioutil.WriteFile(path+string(os.PathSeparator)+name, []byte(""), 0755)
-	success := false
-	if err == nil {
-		success = true
-	}
-	return success, err
+	return err
 }
 
 //WriteFile writes the content string into the file taken as input.
-func WriteFile(filename string, content string) (bool, error) {
+func WriteFile(filename string, content string) error {
 	err := ioutil.WriteFile(filename, []byte(content), 0755)
-	success := false
-	if err == nil {
-		success = true
-	}
-	return success, err
+	return err
 }
