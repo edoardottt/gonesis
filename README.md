@@ -16,6 +16,10 @@ Usage 💻
 -------
 `gonesis` (or `~/go/bin/gonesis` if you encounter errors)
 
+Changelog 📌
+-------
+Detailed changes for each release are documented in the [release notes](https://github.com/edoardottt/gonesis/releases).
+
 License 📝
 -------
 
