@@ -86,7 +86,7 @@ func main() {
 	}
 
 	//api
-	if AskUser("Will you need API?") {
+	if AskUser("Will you need APIs?") {
 		err = CreateDir(rootDir, "api")
 		if err != nil {
 			log.Fatal(err)
