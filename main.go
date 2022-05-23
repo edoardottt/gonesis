@@ -183,7 +183,7 @@ func Description() string {
 //false otherwise.
 func AskUser(question string) bool {
 	reader := bufio.NewReader(os.Stdin)
-	fmt.Print("[ > ]" + question + " ")
+	fmt.Print("[ ? ] " + question + " ")
 	answer, _ := reader.ReadString('\n')
 	if len(answer) > 0 && answer[len(answer)-1] == '\n' {
 		answer = answer[:len(answer)-1]
