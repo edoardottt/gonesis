@@ -34,6 +34,7 @@ const (
 
 var (
 	ErrProjectName = errors.New("the project name can contains only alphanumeric characters, _ and -")
+	ErrGoModExists = errors.New("go.mod already exists")
 )
 
 func main() {
@@ -69,7 +70,7 @@ func main() {
 
 	err = cmd.Run()
 	if err != nil {
-		log.Fatal("go.mod already exists in this folder?")
+		log.Fatal(ErrGoModExists)
 	}
 
 	oldLocation := "./go.mod"
