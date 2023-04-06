@@ -1,5 +1,5 @@
 # gonesis
-Create Golang project template ready to be pushed on GitHub with a single command (Go + Genesis)
+Generate Golang project template ready to be pushed on GitHub with a single command (Go + Genesis)
 
 Installation 📡
 -------
