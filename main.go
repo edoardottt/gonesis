@@ -16,7 +16,6 @@ import (
 	"bufio"
 	"errors"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"os"
 	"os/exec"
@@ -67,6 +66,8 @@ func main() {
 	// go.mod.
 	name := GithubHandle()
 	cmd := exec.Command("go", "mod", "init", "github.com/"+name+"/"+projectName)
+
+	cmd.Dir = "./" + projectName
 
 	err = cmd.Run()
 	if err != nil {
@@ -308,12 +309,12 @@ func CreateDir(path string, name string) error {
 // CreateFile creates the file with the name
 // taken as input.
 func CreateFile(path string, name string) error {
-	err := ioutil.WriteFile(path+string(os.PathSeparator)+name, []byte(""), Permission0755)
+	err := os.WriteFile(path+string(os.PathSeparator)+name, []byte(""), Permission0755)
 	return err
 }
 
 // WriteFile writes the content string into the file taken as input.
 func WriteFile(filename string, content string) error {
-	err := ioutil.WriteFile(filename, []byte(content), Permission0755)
+	err := os.WriteFile(filename, []byte(content), Permission0755)
 	return err
 }
