@@ -1,0 +1,22 @@
+name: gonesis
+summary: Generate Golang project template
+description: |
+      Generate Golang project template ready to be pushed on GitHub with a single command (Go + Genesis)
+version: 1.0.1
+grade: stable
+base: core20
+
+confinement: strict
+
+apps:
+  gonesis:
+    command: bin/gonesis
+    plugs:
+      - home
+      - network
+
+parts:
+  gonesis:
+    plugin: go
+    source-type: git
+    source: https://github.com/edoardottt/gonesis

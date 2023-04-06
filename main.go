@@ -28,7 +28,8 @@ const (
 	Permission0755 = 0755
 	Permission0775 = 0775
 	MDBashInit     = "```bash"
-	Banner         = "gonesis v1.0.1\n\thttps://github.com/edoardottt/gonesis\n\n"
+	Version        = "1.0.1"
+	Banner         = "gonesis v" + Version + "\n\thttps://github.com/edoardottt/gonesis\n\n"
 )
 
 var (
