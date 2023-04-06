@@ -14,7 +14,13 @@ go get -v github.com/edoardottt/gonesis
 
 Usage 💻
 -------
-`gonesis` (or `~/go/bin/gonesis` if you encounter errors)
+```console
+gonesis
+``` 
+or if you encounter errors try:
+```console
+~/go/bin/gonesis
+```
 
 Changelog 📌
 -------
