@@ -1,7 +1,7 @@
 /*
 gonesis
 
-Create Golang project structure ready to be pushed on GitHub with a single command
+Create Golang project template ready to be pushed on GitHub with a single command
 
 https://github.com/edoardottt/gonesis
 
@@ -28,6 +28,7 @@ const (
 	Permission0755 = 0755
 	Permission0775 = 0775
 	MDBashInit     = "```bash"
+	Banner         = "gonesis v1.0.1\n\thttps://github.com/edoardottt/gonesis\n\n"
 )
 
 var (
@@ -35,6 +36,8 @@ var (
 )
 
 func main() {
+	fmt.Print(Banner)
+
 	projectName, err := ProjectName()
 	if err != nil {
 		log.Fatal(err)
