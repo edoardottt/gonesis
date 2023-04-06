@@ -1,5 +1,8 @@
 gonesis
 
+# snap
+*.snap
+
 *.exe
 *.exe~
 *.dll
