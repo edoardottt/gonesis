@@ -67,19 +67,11 @@ func main() {
 	name := GithubHandle()
 	cmd := exec.Command("go", "mod", "init", "github.com/"+name+"/"+projectName)
 
-	cmd.Dir = "./" + projectName
+	cmd.Dir = rootDir
 
 	err = cmd.Run()
 	if err != nil {
 		log.Fatal(ErrGoModExists)
-	}
-
-	oldLocation := "./go.mod"
-	newLocation := rootDir + string(os.PathSeparator) + "go.mod"
-
-	err = os.Rename(oldLocation, newLocation)
-	if err != nil {
-		log.Fatal(err)
 	}
 
 	// pkg.
