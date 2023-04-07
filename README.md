@@ -4,11 +4,6 @@ Generate Golang project template ready to be pushed on GitHub using a single com
 Installation 📡
 -------
 
-**Snap**
-```bash
-sudo snap install gonesis
-```
-
 **Go 1.17+**
 ```bash
 go install -v github.com/edoardottt/gonesis@latest
