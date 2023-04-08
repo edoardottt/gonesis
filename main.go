@@ -122,6 +122,38 @@ func main() {
 		}
 	}
 
+	// scripts.
+	if AskUser("Will you need scripts?") {
+		err = CreateDir(rootDir, "scripts")
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+
+	// test.
+	if AskUser("Will you need test data?") {
+		err = CreateDir(rootDir, "test")
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+
+	// process manager/supervisor (runit, supervisord) configs
+	if AskUser("Will you need process manager/supervisor (runit, supervisord) configs?") {
+		err = CreateDir(rootDir, "init")
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+
+	// assets.
+	if AskUser("Will you need other assets (images, logos, etc)?") {
+		err = CreateDir(rootDir, "assets")
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+
 	// README.md.
 	Readme(rootDir, projectName, description, name)
 
