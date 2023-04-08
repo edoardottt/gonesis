@@ -138,6 +138,14 @@ func main() {
 		}
 	}
 
+	// process manager/supervisor (runit, supervisord) configs
+	if AskUser("Will you need process manager/supervisor (runit, supervisord) configs?") {
+		err = CreateDir(rootDir, "init")
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+
 	// README.md.
 	Readme(rootDir, projectName, description, name)
 
