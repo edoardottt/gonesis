@@ -146,6 +146,14 @@ func main() {
 		}
 	}
 
+	// assets.
+	if AskUser("Will you need other assets (images, logos, etc)?") {
+		err = CreateDir(rootDir, "assets")
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+
 	// README.md.
 	Readme(rootDir, projectName, description, name)
 
