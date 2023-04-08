@@ -130,6 +130,14 @@ func main() {
 		}
 	}
 
+	// test.
+	if AskUser("Will you need test data?") {
+		err = CreateDir(rootDir, "test")
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+
 	// README.md.
 	Readme(rootDir, projectName, description, name)
 
