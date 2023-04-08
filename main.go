@@ -122,6 +122,14 @@ func main() {
 		}
 	}
 
+	// scripts.
+	if AskUser("Will you need scripts?") {
+		err = CreateDir(rootDir, "scripts")
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+
 	// README.md.
 	Readme(rootDir, projectName, description, name)
 
