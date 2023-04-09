@@ -1,7 +1,7 @@
 /*
 gonesis
 
-Create Golang project template ready to be pushed on GitHub with a single command
+Generate Golang project template ready to be pushed on GitHub using a single command (Go + Genesis)
 
 https://github.com/edoardottt/gonesis
 
@@ -24,11 +24,40 @@ import (
 )
 
 const (
-	Permission0755 = 0755
-	Permission0775 = 0775
-	MDBashInit     = "```bash"
-	Version        = "1.0.1"
-	Banner         = "gonesis v" + Version + "\n\thttps://github.com/edoardottt/gonesis\n\n"
+	Permission0755   = 0755
+	Permission0775   = 0775
+	MDConsoleInit    = "```console"
+	Version          = "1.0.2"
+	Banner           = "gonesis v" + Version + "\n\thttps://github.com/edoardottt/gonesis\n\n"
+	gitignoreContent = `# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+	
+# Test binary, built with "go test -c"
+*.test
+
+# Output of the go coverage tool, specifically when used with LiteIDE
+*.out
+
+# Dependency directories (remove the comment below to include it)
+# vendor/
+
+# Go workspace file
+go.work
+`
+	mainContent = `package main
+
+import (
+	"fmt"
+)
+
+func main() {
+	fmt.Println("Hello, World!")
+}
+`
 )
 
 var (
@@ -45,8 +74,8 @@ func main() {
 	}
 
 	rootDir := "." + string(os.PathSeparator) + projectName
-	err = CreateDir(".", projectName)
 
+	err = CreateDir(".", projectName)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -74,83 +103,42 @@ func main() {
 		log.Fatal(ErrGoModExists)
 	}
 
-	// pkg.
-	err = CreateDir(rootDir, "pkg")
-	if err != nil {
-		log.Fatal(err)
-	}
+	var (
+		mandatoryFolders = []string{"pkg", "docs", "internal", "examples"}
+		askUserFolders   = map[string]string{
+			"api":     "Do you need APIs?",
+			"server":  "Do you need a server?",
+			"db":      "Do you need a database?",
+			"scripts": "Do you need scripts?",
+			"test":    "Do you need test data?",
+			"init":    "Do you need process manager/supervisor (runit, supervisord) configs?",
+			"assets":  "Do you need other assets (images, logos, etc)?",
+		}
+	)
 
-	// docs.
-	err = CreateDir(rootDir, "docs")
-	if err != nil {
-		log.Fatal(err)
-	}
+	for _, elem := range mandatoryFolders {
+		err = CreateDir(rootDir, elem)
+		if err != nil {
+			log.Fatal(err)
+		}
 
-	// internal.
-	err = CreateDir(rootDir, "internal")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	// examples.
-	err = CreateDir(rootDir, "examples")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	// api.
-	if AskUser("Will you need APIs?") {
-		err = CreateDir(rootDir, "api")
+		err = CreateGitKeep(rootDir, elem)
 		if err != nil {
 			log.Fatal(err)
 		}
 	}
 
-	// server.
-	if AskUser("Will you need a server?") {
-		err = CreateDir(rootDir, "server")
-		if err != nil {
-			log.Fatal(err)
-		}
-	}
+	for folder, question := range askUserFolders {
+		if AskUser(question) {
+			err = CreateDir(rootDir, folder)
+			if err != nil {
+				log.Fatal(err)
+			}
 
-	// db.
-	if AskUser("Will you need a database?") {
-		err = CreateDir(rootDir, "db")
-		if err != nil {
-			log.Fatal(err)
-		}
-	}
-
-	// scripts.
-	if AskUser("Will you need scripts?") {
-		err = CreateDir(rootDir, "scripts")
-		if err != nil {
-			log.Fatal(err)
-		}
-	}
-
-	// test.
-	if AskUser("Will you need test data?") {
-		err = CreateDir(rootDir, "test")
-		if err != nil {
-			log.Fatal(err)
-		}
-	}
-
-	// process manager/supervisor (runit, supervisord) configs
-	if AskUser("Will you need process manager/supervisor (runit, supervisord) configs?") {
-		err = CreateDir(rootDir, "init")
-		if err != nil {
-			log.Fatal(err)
-		}
-	}
-
-	// assets.
-	if AskUser("Will you need other assets (images, logos, etc)?") {
-		err = CreateDir(rootDir, "assets")
-		if err != nil {
-			log.Fatal(err)
+			err = CreateGitKeep(rootDir, folder)
+			if err != nil {
+				log.Fatal(err)
+			}
 		}
 	}
 
@@ -188,18 +176,7 @@ func CreateMain(rootDir string, projectName string) {
 		log.Fatal(err)
 	}
 
-	main := `package main
-
-import (
-	"fmt"
-)
-
-func main() {
-	fmt.Println("Hello, World!")
-}
-`
-	err = WriteFile(rootDir+string(os.PathSeparator)+"cmd"+string(os.PathSeparator)+projectName+".go", main)
-
+	err = WriteFile(rootDir+string(os.PathSeparator)+"cmd"+string(os.PathSeparator)+projectName+".go", mainContent)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -240,7 +217,7 @@ func Description() string {
 func AskUser(question string) bool {
 	reader := bufio.NewReader(os.Stdin)
 
-	fmt.Print("[ ? ] " + question + " ")
+	fmt.Print("[ ? ] " + question + " [Y/n] ")
 
 	answer, _ := reader.ReadString('\n')
 	if len(answer) > 0 && answer[len(answer)-1] == '\n' {
@@ -248,7 +225,7 @@ func AskUser(question string) bool {
 	}
 
 	answer = strings.ToLower(answer)
-	if answer == "y" || answer == "yes" {
+	if answer == "y" || answer == "yes" || answer == "" {
 		return true
 	}
 
@@ -262,26 +239,7 @@ func Gitignore(rootDir string) {
 		log.Fatal(err)
 	}
 
-	gitignore := `# Binaries for programs and plugins
-*.exe
-*.exe~
-*.dll
-*.so
-*.dylib
-	
-# Test binary, built with "go test -c"
-*.test
-
-# Output of the go coverage tool, specifically when used with LiteIDE
-*.out
-
-# Dependency directories (remove the comment below to include it)
-# vendor/
-
-# Go workspace file
-go.work`
-
-	err = WriteFile(rootDir+string(os.PathSeparator)+".gitignore", gitignore)
+	err = WriteFile(rootDir+string(os.PathSeparator)+".gitignore", gitignoreContent)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -299,16 +257,16 @@ func Readme(rootDir string, projectName string, description string, name string)
 	readme += "\n\nInstallation 📡\n"
 	readme += "-------\n"
 	readme += "**Go 1.17+**\n"
-	readme += MDBashInit + "\n"
-	readme += "go install -v github.com/" + name + "/" + projectName + "@latest\n"
+	readme += MDConsoleInit + "\n"
+	readme += "go install -v github.com/" + name + "/" + projectName + "/cmd/" + projectName + "@latest\n"
 	readme += "```\n"
 	readme += "**otherwise**\n"
-	readme += MDBashInit + "\n"
+	readme += MDConsoleInit + "\n"
 	readme += "go get -v github.com/" + name + "/" + projectName + "\n"
 	readme += "```\n\n"
 	readme += "Usage 💻\n"
 	readme += "-------\n"
-	readme += MDBashInit + "\n"
+	readme += MDConsoleInit + "\n"
 	readme += projectName + "\n"
 	readme += "```\n\n"
 	readme += "Created with [gonesis](https://github.com/edoardottt/gonesis)❤️"
@@ -317,6 +275,21 @@ func Readme(rootDir string, projectName string, description string, name string)
 	if err != nil {
 		log.Fatal(err)
 	}
+}
+
+// CreateGitKeep creates a .gitkeep file in the specified path and folder.
+func CreateGitKeep(rootDir, folder string) error {
+	err := CreateFile(rootDir+string(os.PathSeparator)+folder, ".gitkeep")
+	if err != nil {
+		return err
+	}
+
+	err = WriteFile(rootDir+string(os.PathSeparator)+folder+string(os.PathSeparator)+".gitkeep", "keep this file plz")
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 //----------------------------------------
