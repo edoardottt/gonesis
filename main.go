@@ -24,11 +24,40 @@ import (
 )
 
 const (
-	Permission0755 = 0755
-	Permission0775 = 0775
-	MDBashInit     = "```bash"
-	Version        = "1.0.1"
-	Banner         = "gonesis v" + Version + "\n\thttps://github.com/edoardottt/gonesis\n\n"
+	Permission0755   = 0755
+	Permission0775   = 0775
+	MDBashInit       = "```bash"
+	Version          = "1.0.1"
+	Banner           = "gonesis v" + Version + "\n\thttps://github.com/edoardottt/gonesis\n\n"
+	gitignoreContent = `# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+	
+# Test binary, built with "go test -c"
+*.test
+
+# Output of the go coverage tool, specifically when used with LiteIDE
+*.out
+
+# Dependency directories (remove the comment below to include it)
+# vendor/
+
+# Go workspace file
+go.work
+`
+	mainContent = `package main
+
+import (
+	"fmt"
+)
+
+func main() {
+	fmt.Println("Hello, World!")
+}
+`
 )
 
 var (
@@ -45,8 +74,8 @@ func main() {
 	}
 
 	rootDir := "." + string(os.PathSeparator) + projectName
-	err = CreateDir(".", projectName)
 
+	err = CreateDir(".", projectName)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -80,8 +109,18 @@ func main() {
 		log.Fatal(err)
 	}
 
+	err = CreateGitKeep(rootDir, "pkg")
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	// docs.
 	err = CreateDir(rootDir, "docs")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	err = CreateGitKeep(rootDir, "docs")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -92,8 +131,18 @@ func main() {
 		log.Fatal(err)
 	}
 
+	err = CreateGitKeep(rootDir, "internal")
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	// examples.
 	err = CreateDir(rootDir, "examples")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	err = CreateGitKeep(rootDir, "examples")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -101,6 +150,11 @@ func main() {
 	// api.
 	if AskUser("Will you need APIs?") {
 		err = CreateDir(rootDir, "api")
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		err = CreateGitKeep(rootDir, "api")
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -112,11 +166,21 @@ func main() {
 		if err != nil {
 			log.Fatal(err)
 		}
+
+		err = CreateGitKeep(rootDir, "server")
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
 
 	// db.
 	if AskUser("Will you need a database?") {
 		err = CreateDir(rootDir, "db")
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		err = CreateGitKeep(rootDir, "db")
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -128,11 +192,21 @@ func main() {
 		if err != nil {
 			log.Fatal(err)
 		}
+
+		err = CreateGitKeep(rootDir, "scripts")
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
 
 	// test.
 	if AskUser("Will you need test data?") {
 		err = CreateDir(rootDir, "test")
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		err = CreateGitKeep(rootDir, "test")
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -144,11 +218,21 @@ func main() {
 		if err != nil {
 			log.Fatal(err)
 		}
+
+		err = CreateGitKeep(rootDir, "init")
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
 
 	// assets.
 	if AskUser("Will you need other assets (images, logos, etc)?") {
 		err = CreateDir(rootDir, "assets")
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		err = CreateGitKeep(rootDir, "assets")
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -188,18 +272,7 @@ func CreateMain(rootDir string, projectName string) {
 		log.Fatal(err)
 	}
 
-	main := `package main
-
-import (
-	"fmt"
-)
-
-func main() {
-	fmt.Println("Hello, World!")
-}
-`
-	err = WriteFile(rootDir+string(os.PathSeparator)+"cmd"+string(os.PathSeparator)+projectName+".go", main)
-
+	err = WriteFile(rootDir+string(os.PathSeparator)+"cmd"+string(os.PathSeparator)+projectName+".go", mainContent)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -262,26 +335,7 @@ func Gitignore(rootDir string) {
 		log.Fatal(err)
 	}
 
-	gitignore := `# Binaries for programs and plugins
-*.exe
-*.exe~
-*.dll
-*.so
-*.dylib
-	
-# Test binary, built with "go test -c"
-*.test
-
-# Output of the go coverage tool, specifically when used with LiteIDE
-*.out
-
-# Dependency directories (remove the comment below to include it)
-# vendor/
-
-# Go workspace file
-go.work`
-
-	err = WriteFile(rootDir+string(os.PathSeparator)+".gitignore", gitignore)
+	err = WriteFile(rootDir+string(os.PathSeparator)+".gitignore", gitignoreContent)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -317,6 +371,21 @@ func Readme(rootDir string, projectName string, description string, name string)
 	if err != nil {
 		log.Fatal(err)
 	}
+}
+
+// CreateGitKeep creates a .gitkeep file in the specified path and folder.
+func CreateGitKeep(rootDir, folder string) error {
+	err := CreateFile(rootDir+string(os.PathSeparator)+folder, ".gitkeep")
+	if err != nil {
+		return err
+	}
+
+	err = WriteFile(rootDir+string(os.PathSeparator)+folder+string(os.PathSeparator)+".gitkeep", "keep this file plz")
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 //----------------------------------------
