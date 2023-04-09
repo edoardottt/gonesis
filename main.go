@@ -1,7 +1,7 @@
 /*
 gonesis
 
-Create Golang project template ready to be pushed on GitHub with a single command
+Generate Golang project template ready to be pushed on GitHub using a single command (Go + Genesis)
 
 https://github.com/edoardottt/gonesis
 
@@ -26,7 +26,7 @@ import (
 const (
 	Permission0755   = 0755
 	Permission0775   = 0775
-	MDBashInit       = "```bash"
+	MDConsoleInit    = "```console"
 	Version          = "1.0.2"
 	Banner           = "gonesis v" + Version + "\n\thttps://github.com/edoardottt/gonesis\n\n"
 	gitignoreContent = `# Binaries for programs and plugins
@@ -257,16 +257,16 @@ func Readme(rootDir string, projectName string, description string, name string)
 	readme += "\n\nInstallation 📡\n"
 	readme += "-------\n"
 	readme += "**Go 1.17+**\n"
-	readme += MDBashInit + "\n"
-	readme += "go install -v github.com/" + name + "/" + projectName + "@latest\n"
+	readme += MDConsoleInit + "\n"
+	readme += "go install -v github.com/" + name + "/" + projectName + "/cmd/" + projectName + "@latest\n"
 	readme += "```\n"
 	readme += "**otherwise**\n"
-	readme += MDBashInit + "\n"
+	readme += MDConsoleInit + "\n"
 	readme += "go get -v github.com/" + name + "/" + projectName + "\n"
 	readme += "```\n\n"
 	readme += "Usage 💻\n"
 	readme += "-------\n"
-	readme += MDBashInit + "\n"
+	readme += MDConsoleInit + "\n"
 	readme += projectName + "\n"
 	readme += "```\n\n"
 	readme += "Created with [gonesis](https://github.com/edoardottt/gonesis)❤️"
