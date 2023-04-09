@@ -27,7 +27,7 @@ const (
 	Permission0755   = 0755
 	Permission0775   = 0775
 	MDBashInit       = "```bash"
-	Version          = "1.0.1"
+	Version          = "1.0.2"
 	Banner           = "gonesis v" + Version + "\n\thttps://github.com/edoardottt/gonesis\n\n"
 	gitignoreContent = `# Binaries for programs and plugins
 *.exe
@@ -103,138 +103,42 @@ func main() {
 		log.Fatal(ErrGoModExists)
 	}
 
-	// pkg.
-	err = CreateDir(rootDir, "pkg")
-	if err != nil {
-		log.Fatal(err)
-	}
+	var (
+		mandatoryFolders = []string{"pkg", "docs", "internal", "examples"}
+		askUserFolders   = map[string]string{
+			"api":     "Do you need APIs?",
+			"server":  "Do you need a server?",
+			"db":      "Do you need a database?",
+			"scripts": "Do you need scripts?",
+			"test":    "Do you need test data?",
+			"init":    "Do you need process manager/supervisor (runit, supervisord) configs?",
+			"assets":  "Do you need other assets (images, logos, etc)?",
+		}
+	)
 
-	err = CreateGitKeep(rootDir, "pkg")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	// docs.
-	err = CreateDir(rootDir, "docs")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	err = CreateGitKeep(rootDir, "docs")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	// internal.
-	err = CreateDir(rootDir, "internal")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	err = CreateGitKeep(rootDir, "internal")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	// examples.
-	err = CreateDir(rootDir, "examples")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	err = CreateGitKeep(rootDir, "examples")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	// api.
-	if AskUser("Will you need APIs?") {
-		err = CreateDir(rootDir, "api")
+	for _, elem := range mandatoryFolders {
+		err = CreateDir(rootDir, elem)
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		err = CreateGitKeep(rootDir, "api")
+		err = CreateGitKeep(rootDir, elem)
 		if err != nil {
 			log.Fatal(err)
 		}
 	}
 
-	// server.
-	if AskUser("Will you need a server?") {
-		err = CreateDir(rootDir, "server")
-		if err != nil {
-			log.Fatal(err)
-		}
+	for folder, question := range askUserFolders {
+		if AskUser(question) {
+			err = CreateDir(rootDir, folder)
+			if err != nil {
+				log.Fatal(err)
+			}
 
-		err = CreateGitKeep(rootDir, "server")
-		if err != nil {
-			log.Fatal(err)
-		}
-	}
-
-	// db.
-	if AskUser("Will you need a database?") {
-		err = CreateDir(rootDir, "db")
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		err = CreateGitKeep(rootDir, "db")
-		if err != nil {
-			log.Fatal(err)
-		}
-	}
-
-	// scripts.
-	if AskUser("Will you need scripts?") {
-		err = CreateDir(rootDir, "scripts")
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		err = CreateGitKeep(rootDir, "scripts")
-		if err != nil {
-			log.Fatal(err)
-		}
-	}
-
-	// test.
-	if AskUser("Will you need test data?") {
-		err = CreateDir(rootDir, "test")
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		err = CreateGitKeep(rootDir, "test")
-		if err != nil {
-			log.Fatal(err)
-		}
-	}
-
-	// process manager/supervisor (runit, supervisord) configs
-	if AskUser("Will you need process manager/supervisor (runit, supervisord) configs?") {
-		err = CreateDir(rootDir, "init")
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		err = CreateGitKeep(rootDir, "init")
-		if err != nil {
-			log.Fatal(err)
-		}
-	}
-
-	// assets.
-	if AskUser("Will you need other assets (images, logos, etc)?") {
-		err = CreateDir(rootDir, "assets")
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		err = CreateGitKeep(rootDir, "assets")
-		if err != nil {
-			log.Fatal(err)
+			err = CreateGitKeep(rootDir, folder)
+			if err != nil {
+				log.Fatal(err)
+			}
 		}
 	}
 
@@ -313,7 +217,7 @@ func Description() string {
 func AskUser(question string) bool {
 	reader := bufio.NewReader(os.Stdin)
 
-	fmt.Print("[ ? ] " + question + " ")
+	fmt.Print("[ ? ] " + question + " [Y/n] ")
 
 	answer, _ := reader.ReadString('\n')
 	if len(answer) > 0 && answer[len(answer)-1] == '\n' {
@@ -321,7 +225,7 @@ func AskUser(question string) bool {
 	}
 
 	answer = strings.ToLower(answer)
-	if answer == "y" || answer == "yes" {
+	if answer == "y" || answer == "yes" || answer == "" {
 		return true
 	}
 
