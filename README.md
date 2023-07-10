@@ -7,13 +7,13 @@ Installation 📡
 
 **Go 1.17+**
 
-```bash
+```console
 go install -v github.com/edoardottt/gonesis@latest
 ```
 
 **otherwise**
 
-```bash
+```console
 go get -v github.com/edoardottt/gonesis
 ```
 
