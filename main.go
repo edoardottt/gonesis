@@ -157,11 +157,10 @@ func ProjectName() (string, error) {
 	fmt.Print("Name of the project: ")
 
 	project, _ := reader.ReadString('\n')
-	if len(project) > 0 && project[len(project)-1] == '\n' {
-		project = project[:len(project)-1]
-	}
-
-	isProjectNameOkay := regexp.MustCompile(`^[a-zA-Z0-9-_]+$`)
+	project = strings.TrimSuffix(project, "\n")                 //removes all new lines
+	isProjectNameOkay := regexp.MustCompile(`^[a-zA-Z0-9-_]+$`) //regular expression with all allowed characters
+	isProjectNameOkayregx := regexp.MustCompile(`[^a-zA-Z0-9-_]+$`)
+	project = isProjectNameOkayregx.ReplaceAllString(project, "") //removes all unallowed characters using isProjectNameOkayregx
 	if !isProjectNameOkay.Match([]byte(project)) {
 		return project, fmt.Errorf("%w", ErrProjectName)
 	}
