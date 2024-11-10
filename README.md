@@ -52,4 +52,4 @@ License 📝
 -------
 
 This repository is under [GNU General Public License v3.0](https://github.com/edoardottt/gonesis/blob/main/LICENSE).  
-[edoardoottavianelli.it](https://edoardottt.com) to contact me.
+[edoardottt.com](https://edoardottt.com) to contact me.
