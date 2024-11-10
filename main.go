@@ -5,7 +5,7 @@ Generate Golang project template ready to be pushed on GitHub using a single com
 
 https://github.com/edoardottt/gonesis
 
-edoardottt, https://www.edoardoottavianelli.it
+edoardottt, https://edoardottt.com
 
 Under GNU-GPL3: https://github.com/edoardottt/gonesis/blob/main/LICENSE
 */
